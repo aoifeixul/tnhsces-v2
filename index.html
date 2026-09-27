@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TNHS Computerized Enrollment System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="loginScreen" class="login-shell">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="assets/tnhs-logo.png" alt="Talugtug National High School logo">
+      <h1>Talugtug National High School</h1>
+      <p>TNHS Computerized Enrollment System</p>
+    </div>
+
+    <div id="loginError" class="login-error" role="alert">
+      Invalid username or password. Please check your credentials and try again.
+    </div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" autocomplete="username" placeholder="Enter username">
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input id="password" type="password" autocomplete="current-password" placeholder="Enter password">
+          <button type="button" class="toggle-pass" id="togglePassword">Show</button>
+        </div>
+      </div>
+
+      <div class="login-row">
+        <label class="remember"><input type="checkbox" id="rememberMe"> Remember me</label>
+      </div>
+
+      <button class="signin" type="submit">Sign In</button>
+    </form>
+
+      </div>
+</div>
+
+<div class="app" style="display:none">
+<aside class="sidebar">
+<div class="brand"><img src="assets/tnhs-logo.png" alt="TNHS logo"><div><b>Talugtug National<br>High School</b><small>Computerized Enrollment System</small></div></div>
+<nav>
+<button class="nav active" data-page="dashboard">Dashboard</button>
+<button class="nav" data-page="enrollment">New Enrollment</button>
+<button class="nav" data-page="records">Enrollment Records</button>
+<button class="nav" data-page="print">Print</button>
+<button class="nav" data-page="logs">Activity Logs</button>
+<button class="nav" data-page="settings">System Settings</button>
+<button class="nav" data-page="trash">Trash</button>
+</nav>
+<nav class="logout"><button class="nav" data-page="logout">Logout</button></nav>
+</aside>
+<main class="main">
+<header class="topbar"><div><div class="title" id="title">Dashboard</div><div class="sub">Enrollment Record Management</div></div><div class="user"><div class="avatar">A</div>Admin</div></header>
+<section class="content">
+
+<div id="dashboard" class="screen">
+  <div class="hero">
+    <div>
+      <h1>TNHS Computerized Enrollment System</h1>
+      <p>Administrative workspace for encoding, organizing, retrieving, updating, and generating enrollment records.</p>
+    </div>
+    <img src="assets/tnhs-logo.png" alt="Talugtug National High School logo">
+  </div>
+
+  <div class="section">Enrollment Overview</div>
+  <div class="stats">
+    <div class="card"><div class="label">Total Enrollment Records</div><div class="value" id="totalRecords">0</div></div>
+    <div class="card"><div class="label">Grade 11</div><div class="value" id="grade11Count">0</div></div>
+    <div class="card"><div class="label">Grade 12</div><div class="value" id="grade12Count">0</div></div>
+  </div>
+
+  <div class="section">Quick Actions</div>
+  <div class="quick">
+    <button id="dashboardNewEnrollmentAction" data-page="enrollment"><b>New Enrollment</b><span>Encode a new enrollment record.</span></button>
+    <button id="dashboardViewRecordsAction" data-page="records"><b>View Records</b><span>Search and manage enrollment records.</span></button>
+    <button id="dashboardSearchAction"><b>Search Learner</b><span>Find by name, LRN, or Record ID.</span></button>
+    <button id="dashboardPrintAction" data-page="print"><b>Print Forms</b><span>Open printable enrollment outputs.</span></button>
+  </div>
+
+  <div class="section">Find a Learner</div>
+  <div class="card">
+    <div class="dashboard-search">
+      <input id="dashboardSearch" type="search" placeholder="Search learner name, LRN, or Record ID">
+      <button class="search-btn" id="dashboardSearchBtn">Search</button>
+    </div>
+    <div id="searchHint" class="empty-action">Use Enrollment Records to search and manage saved enrollment records.</div>
+  </div>
+
+  <div class="section">Enrollment Distribution & Recent Activity</div>
+  <div class="dashboard-grid">
+    <div class="card">
+      <div class="card-title">Grade-Level Distribution</div>
+      <div class="card-meta">Based on saved enrollment records.</div>
+
+      <div class="dist-row">
+        <div class="dist-label"><span>Grade 11</span><span id="grade11Percent">0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="grade11Bar"></div></div>
+      </div>
+
+      <div class="dist-row">
+        <div class="dist-label"><span>Grade 12</span><span id="grade12Percent">0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="grade12Bar"></div></div>
+      </div>
+
+      <div id="distributionEmpty" class="empty-action">No enrollment records available yet.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Recent Activity</div>
+      <div class="card-meta">Latest recorded system actions.</div>
+      <div style="overflow:auto;margin-top:12px">
+        <table class="table">
+          <thead><tr><th>Action</th><th>Record</th><th>Time</th></tr></thead>
+          <tbody id="recentActivityBody">
+            <tr><td class="empty" colspan="3">No activity yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div id="enrollment" class="placeholder">
+<div class="enroll-shell">
+<div class="enroll-progress">
+<button class="step active" data-step="1"><span class="num">1</span>Learner</button>
+<button class="step" data-step="2"><span class="num">2</span>Address</button>
+<button class="step" data-step="3"><span class="num">3</span>Parent & Other</button>
+<button class="step" data-step="4"><span class="num">4</span>SHS Information</button>
+<button class="step" data-step="5"><span class="num">5</span>Certification & Modality</button>
+</div>
+<form id="enrollmentForm" novalidate>
+<div class="enroll-body">
+
+<section class="enroll-step" data-form-step="1">
+<h2 class="form-section-title">Enrollment & Learner Information</h2><p class="form-section-sub">Encode the learner and enrollment information based on the supplied Enhanced Basic Education Enrollment Form.</p>
+<div class="form-group-title">Enrollment Information</div>
+<div class="form-grid two">
+<div class="form-field"><label for="schoolYear">School Year <span>*</span></label><input id="schoolYear" name="schoolYear" placeholder="e.g. 2026-2027"><div class="form-error">School Year is required.</div></div>
+<div class="form-field"><label for="gradeLevel">Grade Level to Enroll <span>*</span></label><select id="gradeLevel" name="gradeLevel"><option value="">Select grade level</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select><div class="form-error">Grade Level is required.</div></div>
+</div>
+<div class="form-group-title">Learner Information</div>
+<div class="form-grid">
+<div class="form-field"><label for="psa">PSA Birth Certificate No.</label><input id="psa" name="psa" placeholder="If available upon registration"></div>
+<div class="form-field"><label for="lrn">Learner Reference No. (LRN) <span>*</span></label><input id="lrn" name="lrn" inputmode="numeric" placeholder="12-digit LRN"><div class="form-error">LRN is required.</div></div>
+<div class="form-field"><label for="birthdate">Birthdate <span>*</span></label><input id="birthdate" name="birthdate" type="date"><div class="form-error">Birthdate is required.</div></div>
+<div class="form-field"><label for="lastName">Last Name <span>*</span></label><input id="lastName" name="lastName"><div class="form-error">Last Name is required.</div></div>
+<div class="form-field"><label for="firstName">First Name <span>*</span></label><input id="firstName" name="firstName"><div class="form-error">First Name is required.</div></div>
+<div class="form-field"><label for="middleName">Middle Name</label><input id="middleName" name="middleName"></div>
+<div class="form-field"><label for="extensionName">Extension Name</label><input id="extensionName" name="extensionName" placeholder="e.g. Jr., III"></div>
+<div class="form-field"><label for="placeOfBirth">Place of Birth (Municipality/City)</label><input id="placeOfBirth" name="placeOfBirth"></div>
+</div>
+
+</section>
+
+<section class="enroll-step" data-form-step="2" style="display:none">
+<h2 class="form-section-title">Address Information</h2><p class="form-section-sub">Enter the learner's current and permanent address information.</p>
+<div class="form-group-title">Current Address</div>
+<div class="form-grid">
+<div class="form-field"><label for="curHouse">House No./Street</label><input id="curHouse"></div><div class="form-field"><label for="curStreet">Street Name</label><input id="curStreet"></div><div class="form-field"><label for="curBarangay">Barangay</label><input id="curBarangay"></div><div class="form-field"><label for="curMunicipality">Municipality/City</label><input id="curMunicipality"></div><div class="form-field"><label for="curProvince">Province</label><input id="curProvince"></div><div class="form-field"><label for="curZip">Zip Code</label><input id="curZip"></div><div class="form-field"><label for="curCountry">Country</label><input id="curCountry" value="Philippines"></div>
+</div>
+<div class="form-group-title">Permanent Address</div>
+<div class="form-field"><label>Permanent Address Same with your Current Address?</label><div class="choice-row"><label class="choice"><input type="radio" name="sameAddress" value="Yes"> Yes</label><label class="choice"><input type="radio" name="sameAddress" value="No" checked> No</label></div></div>
+<div id="permanentFields" style="margin-top:15px"><div class="form-grid"><div class="form-field"><label for="permHouse">House No./Street</label><input id="permHouse"></div><div class="form-field"><label for="permStreet">Street Name</label><input id="permStreet"></div><div class="form-field"><label for="permBarangay">Barangay</label><input id="permBarangay"></div><div class="form-field"><label for="permMunicipality">Municipality/City</label><input id="permMunicipality"></div><div class="form-field"><label for="permProvince">Province</label><input id="permProvince"></div><div class="form-field"><label for="permZip">Zip Code</label><input id="permZip"></div></div></div>
+</section>
+
+<section class="enroll-step" data-form-step="3" style="display:none">
+<h2 class="form-section-title">Parent & Other Learner Information</h2><p class="form-section-sub">Enter the parent and other learner information represented on the supplied form.</p>
+<div class="form-group-title">Father's Name</div><div class="form-field"><label class="choice"><input type="checkbox" id="fatherNotProvided"> Information not provided</label></div><div id="fatherFields" class="form-grid"><div class="form-field"><label>Last Name</label><input id="fatherLast"></div><div class="form-field"><label>First Name</label><input id="fatherFirst"></div><div class="form-field"><label>Middle Name</label><input id="fatherMiddle"></div><div class="form-field"><label>Contact Number</label><input id="fatherContact" inputmode="numeric" maxlength="11" placeholder="09XXXXXXXXX"><div class="form-error">Enter an 11-digit contact number starting with 09.</div></div></div>
+<div class="form-group-title">Mother's Maiden Name</div><div class="form-field"><label class="choice"><input type="checkbox" id="motherNotProvided"> Information not provided</label></div><div id="motherFields" class="form-grid"><div class="form-field"><label>Last Name</label><input id="motherLast"></div><div class="form-field"><label>First Name</label><input id="motherFirst"></div><div class="form-field"><label>Middle Name</label><input id="motherMiddle"></div><div class="form-field"><label>Contact Number</label><input id="motherContact" inputmode="numeric" maxlength="11" placeholder="09XXXXXXXXX"><div class="form-error">Enter an 11-digit contact number starting with 09.</div></div></div>
+<div class="form-group-title">Other Learner Information</div><div class="form-grid">
+<div class="form-field"><label>Age</label><input id="age" type="number" min="0" max="100"></div><div class="form-field"><label>Mother Tongue</label><input id="motherTongue"></div>
+<div class="form-field"><label>With</label><div class="choice-row"><label class="choice"><input type="radio" name="with" value="Yes"> Yes</label><label class="choice"><input type="radio" name="with" value="No"> No</label></div></div>
+<div class="form-field"><label>Returning (Balik-Aral)</label><div class="choice-row"><label class="choice"><input type="radio" name="returning" value="Yes"> Yes</label><label class="choice"><input type="radio" name="returning" value="No" checked> No</label></div></div>
+<div class="form-field"><label>Sex</label><div class="choice-row"><label class="choice"><input type="radio" name="sex" value="Male"> Male</label><label class="choice"><input type="radio" name="sex" value="Female"> Female</label></div></div>
+</div>
+<div class="form-group-title">Indigenous Peoples / Indigenous Cultural Community</div><div class="form-field"><label>Belonging to any Indigenous Peoples (IP) Community/Indigenous Cultural Community?</label><div class="choice-row"><label class="choice"><input type="radio" name="ipCommunity" value="Yes"> Yes</label><label class="choice"><input type="radio" name="ipCommunity" value="No" checked> No</label></div><div id="ipSpecifyWrap" class="conditional"><div class="form-field"><label>If Yes, please specify</label><input id="ipSpecification"></div></div></div>
+<div class="form-group-title">4Ps</div><div class="form-field"><label>Is your family a beneficiary of 4Ps?</label><div class="choice-row"><label class="choice"><input type="radio" name="fourPs" value="Yes"> Yes</label><label class="choice"><input type="radio" name="fourPs" value="No" checked> No</label></div><div id="fourPsWrap" class="conditional"><div class="form-field"><label>If Yes, write the 4Ps Household ID Number below</label><input id="fourPsHouseholdId"></div></div></div>
+</section>
+
+<section class="enroll-step" data-form-step="4" style="display:none">
+<h2 class="form-section-title">Senior High School Information</h2><p class="form-section-sub">Enter the SHS-related information represented on Page 2 of the supplied form.</p>
+<div class="form-group-title">Guardian's Name</div><div class="form-grid"><div class="form-field"><label>Last Name</label><input id="guardianLast"></div><div class="form-field"><label>First Name</label><input id="guardianFirst"></div><div class="form-field"><label>Middle Name</label><input id="guardianMiddle"></div><div class="form-field"><label>Contact Number</label><input id="guardianContact" inputmode="numeric" maxlength="11" placeholder="09XXXXXXXXX"><div class="form-error">Enter an 11-digit contact number starting with 09.</div></div></div>
+<div class="form-group-title">Previous School Information</div><div class="form-grid"><div class="form-field"><label>Last Grade Level Completed</label><input id="lastGradeCompleted"></div><div class="form-field"><label>Last School Year Completed</label><input id="lastSchoolYear"></div><div class="form-field"><label>Last School Attended</label><input id="lastSchoolAttended"></div><div class="form-field"><label>School ID</label><input id="schoolId"></div></div>
+<div class="form-group-title">Current SHS Information</div><div class="form-grid"><div class="form-field"><label>Semester</label><div class="choice-row"><label class="choice"><input type="radio" name="semester" value="1st Sem"> 1st Sem</label><label class="choice"><input type="radio" name="semester" value="2nd Sem"> 2nd Sem</label></div></div><div class="form-field"><label>Track</label><input id="track"></div><div class="form-field"><label>Strand</label><input id="strand"></div></div>
+</section>
+
+<section class="enroll-step" data-form-step="5" style="display:none">
+<h2 class="form-section-title">Certification & Preferred Distance Learning Modality/ies</h2><p class="form-section-sub">This section follows the certification and modality portion of the supplied form.</p>
+<div class="form-group-title">Certification</div><div class="card" style="box-shadow:none;background:#f8fafc"><div style="font-size:12px;line-height:1.65">I hereby certify that the above information given are true and correct to the best of my knowledge and I allow the Department of Education to use my child’s details to create and/or update his/her learner profile in the Learner Information System. The information herein shall be treated as confidential in compliance with the Data Privacy Act of 2012.</div></div>
+<div class="form-grid two" style="margin-top:18px"><div class="form-field"><label>Signature Over Printed Name of Parent/Guardian</label><input id="parentGuardianPrintedName" placeholder="Printed name"></div><div class="form-field"><label>Date</label><input id="certificationDate" type="date"></div></div>
+<div class="form-group-title">Preferred Distance Learning Modality/ies</div><div class="hint">Choose all that applies.</div>
+<div class="choice-row" style="margin-top:10px">
+<label class="choice"><input type="checkbox" name="modalities" value="Modular (Print)"> Modular (Print)</label><label class="choice"><input type="checkbox" name="modalities" value="Online"> Online</label><label class="choice"><input type="checkbox" name="modalities" value="Radio-Based Instruction"> Radio-Based Instruction</label><label class="choice"><input type="checkbox" name="modalities" value="Blended"> Blended</label><label class="choice"><input type="checkbox" name="modalities" value="Modular (Digital)"> Modular (Digital)</label><label class="choice"><input type="checkbox" name="modalities" value="Educational Television"> Educational Television</label><label class="choice"><input type="checkbox" name="modalities" value="Homeschooling"> Homeschooling</label><label class="choice"><input type="checkbox" name="modalities" value="Face to Face"> Face to Face</label>
+</div>
+</section>
+
+</div>
+<div class="enroll-actions"><button type="button" class="btn" id="prevStep">Back</button><button type="button" class="btn primary" id="nextStep">Next</button></div>
+</form></div>
+
+<div id="reviewView" style="display:none">
+  <div class="review-shell">
+    <div class="review-head">
+      <h2>Review &amp; Confirm Enrollment</h2>
+      <p>Review the entered information before creating the enrollment record.</p>
+    </div>
+    <div id="reviewBody" class="review-body"></div>
+    <div class="review-actions">
+      <button type="button" class="btn" id="backToForm">Back to Form</button>
+      <button type="button" class="btn primary" id="confirmSave">Confirm &amp; Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="saveSuccessView" style="display:none">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h2>Enrollment Record Saved</h2>
+    <p>The enrollment information has been saved to the system.</p>
+    <div class="record-id" id="savedRecordId">—</div>
+    <div class="success-actions">
+      <button type="button" class="btn" id="newEnrollmentAfterSave">New Enrollment</button>
+      <button type="button" class="btn" id="viewSavedRecord">View Record</button>
+      <button type="button" class="btn primary" id="printSavedRecord">Print / Save as PDF</button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<div id="recordsListView" style="display:none">
+  <div class="records-shell">
+    <div class="records-toolbar">
+      <div class="records-toolbar-row">
+        <div class="records-search"><input id="recordsSearch" type="search" placeholder="Search learner name, LRN, or Record ID"></div>
+        <select id="recordsGradeFilter" class="records-filter">
+          <option value="">All Grade Levels</option>
+          <option value="11">Grade 11</option>
+          <option value="12">Grade 12</option>
+        </select>
+        <select id="recordsYearFilter" class="records-filter">
+          <option value="">All School Years</option>
+        </select>
+        <select id="recordsStatusFilter" class="records-filter">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+        </select>
+        <button class="btn primary" id="newEnrollmentFromRecords">New Enrollment</button>
+      </div>
+      <div class="records-count" id="recordsCount">0 records</div>
+    </div>
+    <div class="records-table-wrap">
+      <table class="records-table">
+        <thead><tr><th>Record ID</th><th>Learner</th><th>LRN</th><th>Grade</th><th>School Year</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead>
+        <tbody id="recordsTableBody"></tbody>
+      </table>
+      <div id="recordsEmpty" class="empty-records" style="display:none"><strong>No enrollment records found</strong>Try changing your search or filters, or create a new enrollment record.</div>
+    </div>
+  </div>
+</div>
+
+<div id="individualRecordView" style="display:none"></div>
+<div id="editRecordView" style="display:none"></div>
+
+<div id="trash" class="placeholder">
+<div class="records-shell">
+  <div class="records-toolbar">
+    <div class="records-toolbar-row">
+      <div><h2 class="module-heading">Trash</h2><p class="module-subheading">Deleted enrollment records are retained for 30 days before automatic removal.</p></div>
+    </div>
+    <div class="records-count" id="trashCount">0 records</div>
+  </div>
+  <div class="records-table-wrap">
+    <table class="records-table">
+      <thead><tr><th>Record ID</th><th>Learner</th><th>LRN</th><th>Grade</th><th>School Year</th><th>Retention</th><th>Deleted</th><th>Action</th></tr></thead>
+      <tbody id="trashTableBody"></tbody>
+    </table>
+    <div id="trashEmpty" class="empty-records" style="display:none"><strong>Trash is empty</strong>Deleted enrollment records will appear here and can be restored within 30 days.</div>
+  </div>
+</div>
+</div>
+
+<div id="print" class="placeholder">
+<div class="print-shell">
+  <div class="print-toolbar">
+    <div class="print-toolbar-row">
+      <select id="printRecordSelect"><option value="">Select an enrollment record</option></select>
+            <button class="btn primary" id="printBEEFButton">Print / Save as PDF</button>
+    </div>
+    
+  </div>
+  <div id="printPreviewArea" class="print-preview-wrap">
+    <div id="printPreview" class="print-preview">
+      <div class="print-empty"><strong>No record selected</strong>Select an enrollment record above to generate the three-page printable preview.</div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="logs" class="placeholder">
+<div class="logs-shell">
+<div class="logs-toolbar"><div class="logs-toolbar-row">
+<div class="logs-search"><input id="logsSearch" type="search" placeholder="Search action, Record ID, or user"></div>
+<select id="logsActionFilter" class="logs-filter"><option value="">All Actions</option><option value="Created enrollment record">Created</option><option value="Updated enrollment record">Updated</option><option value="Generated / printed enrollment form">Generated / Printed</option></select>
+<button class="btn" id="refreshLogs">Refresh</button></div><div class="logs-count" id="logsCount">0 activities</div></div>
+<div class="logs-table-wrap"><table class="logs-table"><thead><tr><th>Date / Time</th><th>User</th><th>Action</th><th>Record ID</th></tr></thead><tbody id="logsTableBody"></tbody></table><div id="logsEmpty" class="logs-empty" style="display:none">No activity logs found.</div></div>
+</div></div>
+<div id="settings" class="placeholder">
+<div class="settings-shell"><div class="settings-head"><h2>System Settings</h2><p>Manage account, interface, and system data.</p></div><div class="settings-body">
+<div class="settings-section"><h3>System Information</h3><div class="settings-content">
+<div class="setting-row"><div><strong>System Name</strong><span>Computerized Enrollment Record Management System</span></div></div>
+<div class="setting-row"><div><strong>School</strong><span>Talugtug National High School</span></div></div>
+<div class="setting-row"><div><strong>Data Storage</strong><span>Browser storage</span></div></div>
+</div></div>
+<div class="settings-section"><h3>Admin Account</h3><div class="settings-content"><div class="account-grid">
+<div class="form-field"><label for="accountDisplayName">Display Name</label><input id="accountDisplayName"></div>
+<div class="form-field"><label for="accountUsername">Username</label><input id="accountUsername" autocomplete="username"></div>
+<div class="form-field"><label for="accountCurrentPassword">Current Password</label><input id="accountCurrentPassword" type="password" autocomplete="current-password"></div>
+<div class="form-field"><label for="accountNewPassword">New Password</label><input id="accountNewPassword" type="password" autocomplete="new-password"></div>
+<div class="form-field"><label for="accountConfirmPassword">Confirm New Password</label><input id="accountConfirmPassword" type="password" autocomplete="new-password"></div>
+</div><div class="settings-actions"><button class="btn primary" id="saveAccountSettings" type="button">Save Account Changes</button></div></div></div>
+<div class="settings-section"><h3>Interface</h3><div class="settings-content"><div class="setting-row"><div><strong>Remember Login Session</strong><span>Keep the login session active on this device.</span></div><button class="toggle" id="rememberSettingToggle" type="button" aria-pressed="false"></button></div></div></div>
+<div class="settings-section"><h3>Data Management</h3><div class="settings-content"><div class="setting-row"><div><strong>Clear Data</strong><span>Delete saved enrollment records and activity logs from this browser.</span></div><button class="danger-btn" id="clearPrototypeData" type="button">Clear Data</button></div></div></div>
+</div></div></div>
+<script src="app.js"></script>
+<div id="toast" class="toast"></div>
+</body></html>
